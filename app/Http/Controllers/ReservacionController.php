@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use Auth;
-use Datatables;
+use App\Unit;
 
 use App\User;
-use App\Unit;
 use App\Resort;
 use App\Reservation;
 use Illuminate\Http\Request;
+use Yajra\Datatables\Facades\Datatables;
 
 class ReservacionController extends Controller
 {

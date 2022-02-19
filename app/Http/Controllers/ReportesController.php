@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Auth;
 use App\Resort;
-use App\Reservation;
+use Carbon\Carbon;
 
+use App\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -30,9 +31,20 @@ class ReportesController extends Controller
                 $reservas->where('resort_id', $request->hotel_id);
             }
             $reservas = $reservas->orderBy('arrival_time')->get();
+        }else{
+            $fecha= Carbon::now()->format('Y-m-d');
+            $reservas = Reservation::with(['resort'])->where('arrival_date', $fecha);
+            $reservas = $reservas->orderBy('arrival_time')->get();
         }
 
-        return view('reportes.llegadas', compact('hoteles', 'reservas'));
+
+        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+        $fecha = Carbon::parse($fecha);
+        $mes = $meses[($fecha->format('n')) - 1];
+        $mes=strtoupper($mes);
+        $fecha = $fecha->format('d') . ' DE ' . $mes . ' DEL ' . $fecha->format('Y');
+
+        return view('reportes.llegadas', compact('hoteles', 'reservas','fecha'));
     }
 
     public function llegadasPDFVertical(Request $request)
